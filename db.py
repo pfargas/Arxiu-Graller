@@ -104,7 +104,7 @@ def insert_partiture(conn, title, ensemble, file_pdf,
     return partiture_id, filepath
 
     
-def create_connection(db_file):
+def create_connection(db_file: str)->sqlite3.Connection:
     """ create a database connection to the SQLite database
         specified by db_file
     :param db_file: database file
@@ -123,31 +123,23 @@ def create_connection(db_file):
 
     return conn
 
+def execute_and_commit(conn: sqlite3.Connection, query: str, params: tuple=())->bool:
+    try:
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        conn.commit()
+    except sqlite3.Error as e:
+        return False
+    return True
 
 
+def update_table(conn: sqlite3.Connection, table_name: str, record_id: int, fields_to_update: dict)->bool:
+    set_clause = ", ".join([f"{key}=?" for key in fields_to_update.keys()])
+    values = list(fields_to_update.values())
+    values.append(record_id)
+    update_query = f"UPDATE {table_name} SET {set_clause} WHERE id=?"
+    return execute_and_commit(conn, update_query, tuple(values))
 
-
-# if __name__ == "__main__":
-    
-    
-#     print(
-#     tokenize_title("El recluta del barret blau")
-#     )
-#     print(
-#     tokenize_title("La la la de l'amor")
-#     )
-    
-#     os.remove("my.db") if os.path.exists("my.db") else None
-
-#     try:
-#         with sqlite3.connect("my.db") as conn:
-#             print(f"Opened SQLite database with version {sqlite3.sqlite_version} successfully.")
-#             cursor = conn.cursor()
-#             cursor.execute(create_table_partitures_query)
-#             cursor.execute(create_table_arrangements_query)
-#             conn.commit()
-#             insert_partiture(conn, "Febrer", "2 veus")
-#             insert_partiture(conn, "El recluta", "2 veus")
-#             insert_partiture(conn, "El recluta", "2 veus i baixa")
-#     except sqlite3.OperationalError as e:
-#         print("Failed to open database:", e)
+def delete_entry(conn: sqlite3.Connection, table_name: str, record_id: int)->bool:
+    delete_query = f"DELETE FROM {table_name} WHERE id=?"
+    return execute_and_commit(conn, delete_query, (record_id,))

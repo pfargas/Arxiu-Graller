@@ -1,7 +1,7 @@
 import streamlit as st
 from db import create_connection
 import pandas as pd
-from streamlit_pages import home_page, upload_page
+from streamlit_pages import home_page, upload_page, update_page
 
 
 st.set_page_config(page_title="Arxiu Graller", page_icon="🎼")
@@ -11,7 +11,7 @@ st.set_page_config(page_title="Arxiu Graller", page_icon="🎼")
 # --------------------
 page = st.sidebar.radio(
     "Navegació",
-    ["🏠 Inici","➕ Afegir partitura", "📄 Veure partitures", "🎼 Veure arranjaments", "⚠️ Admin: Neteja BD"]
+    ["🏠 Inici","➕ Afegir partitura", "📄 Veure partitures", "🎼 Veure arranjaments", "✏️ Actualitza informació" ,"⚠️ Admin: Neteja BD"]
 )
 
 # input the database name with streamlit CLI argument or default to "partitures.db"
@@ -107,8 +107,18 @@ elif page == "🎼 Veure arranjaments":
     else:
         st.info("No hi ha arranjaments.")
 
+
 # -------------------------------------------------------------------
-# PAGE 4 — ADMIN CLEAN DATABASE
+# PAGE 4 - UPDATE INFO
+# -------------------------------------------------------------------
+elif page == "✏️ Actualitza informació":
+    st.title("✏️ Actualitza informació de la partitura")
+    st.warning("Aquesta funcionalitat encara no està implementada.")
+    update_page.update_page(conn=conn)
+
+
+# -------------------------------------------------------------------
+# PAGE 5 — ADMIN CLEAN DATABASE
 # -------------------------------------------------------------------
 elif page == "⚠️ Admin: Neteja BD":
     st.title("⚠️ Neteja de la base de dades")
