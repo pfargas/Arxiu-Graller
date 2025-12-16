@@ -1,0 +1,24 @@
+# Python things
+__pycache__/
+
+# ddbb
+*.sqlite3
+*.db
+*.db-journal
+*.log
+*.pot
+*.mo
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+*.DS_Store
+*.egg-info/
+.env
+.venv
+venv/
+env/
+
+# Specific for this project
+partitures/
